@@ -48,15 +48,18 @@ def clean_dataframe(file_buffer, filename):
     """Clean a single uploaded file."""
     # Read raw to detect header
     if filename.lower().endswith(".csv"):
-        raw = pd.read_csv(file_buffer, header=None, dtype=str, encoding="utf-8", errors="replace")
+        raw = pd.read_csv(file_buffer, header=None, dtype=str, encoding="utf-8", encoding_errors="replace")
     else:
         raw = pd.read_excel(file_buffer, header=None, dtype=str)
 
     header_idx = detect_header_row(raw)
 
+    # Reset buffer to beginning before re-reading
+    file_buffer.seek(0)
+    
     # Re-read using the detected header
     if filename.lower().endswith(".csv"):
-        df = pd.read_csv(file_buffer, header=header_idx, dtype=str, encoding="utf-8", errors="replace")
+        df = pd.read_csv(file_buffer, header=header_idx, dtype=str, encoding="utf-8", encoding_errors="replace")
     else:
         df = pd.read_excel(file_buffer, header=header_idx, dtype=str)
 
